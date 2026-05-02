@@ -1,1 +1,1 @@
-# devops-ecommerce-project
+# DevOps E-Commerce Project

@@ -22,5 +22,3 @@ mkdir -p ansible/playbooks
 mkdir -p docs
 
 echo "# DevOps E-Commerce Project" > README.md
-git add .
-git commit -m "initial: project structure"

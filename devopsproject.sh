@@ -1,7 +1,5 @@
 #!/bin/bash/
 
-git init
-
 # Create the full folder structure
 mkdir -p app/product-service/src/main/java/com/ecommerce/product/controller
 mkdir -p app/product-service/src/main/java/com/ecommerce/product/model

@@ -7,6 +7,7 @@ pipeline {
         DOCKER_CREDENTIALS = 'dockerhub-credentials'
         GITHUB_CREDENTIALS = 'github-credentials'
         EC2_IP             = 'YOUR_EC2_PUBLIC_IP'
+	JAVA_HOME          = '/usr/lib/jvm/java-17-openjdk-amd64'
     }
 
     tools {

@@ -101,12 +101,21 @@ deploy-to-ec2:
   before_script:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
+    - echo "=== Key file type ==="
+    - file "$EC2_SSH_KEY"
+    - echo "=== Key first line ==="
+    - head -1 "$EC2_SSH_KEY"
+    - echo "=== Key last line ==="
+    - tail -1 "$EC2_SSH_KEY"
+    - echo "=== Copying key ==="
     - cat "$EC2_SSH_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
+    - echo "=== id_rsa first line ==="
+    - head -1 ~/.ssh/id_rsa
     - ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$EC2_HOST "docker pull $DOCKERHUB_USERNAME/product-service:gitlab-latest && docker stop product-service-gl || true && docker rm product-service-gl || true && docker run -d --name product-service-gl -p 8083:8081 --restart unless-stopped $DOCKERHUB_USERNAME/product-service:gitlab-latest && sleep 20 && curl -f http://localhost:8083/actuator/health && echo GitLab-CI-Deploy-Success"
+    - ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@$EC2_HOST "echo connected"
   only:
     - main
 

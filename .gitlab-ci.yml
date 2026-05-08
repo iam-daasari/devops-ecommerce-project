@@ -102,7 +102,7 @@ deploy-to-ec2:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
     - echo "=== Key file type ==="
-    - file "$github-ec2-key
+    - file "$github-ec2-key"
     - echo "=== Key first line ==="
     - head -1 "$github-ec2-key"
     - echo "=== Key last line ==="

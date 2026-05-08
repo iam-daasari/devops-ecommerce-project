@@ -66,7 +66,7 @@ maven-package:
   script:
     - echo "Stage 5 - Creating JAR file"
     - cd app/product-service && mvn package -DskipTests
-    - ls -la app/product-service/target/*.jar
+    - ls -la target/*.jar
   artifacts:
     paths:
       - app/product-service/target/*.jar

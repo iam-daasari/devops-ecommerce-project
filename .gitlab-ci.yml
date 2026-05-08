@@ -102,13 +102,13 @@ deploy-to-ec2:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh
     - echo "=== Key file type ==="
-    - file "$EC2_SSH_KEY"
+    - file "$github-ec2-key
     - echo "=== Key first line ==="
-    - head -1 "$EC2_SSH_KEY"
+    - head -1 "$github-ec2-key"
     - echo "=== Key last line ==="
-    - tail -1 "$EC2_SSH_KEY"
+    - tail -1 "$github-ec2-key"
     - echo "=== Copying key ==="
-    - cat "$EC2_SSH_KEY" > ~/.ssh/id_rsa
+    - cat "$github-ec2-key" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - echo "=== id_rsa first line ==="
     - head -1 ~/.ssh/id_rsa

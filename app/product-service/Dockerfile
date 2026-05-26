@@ -7,6 +7,7 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
+RUN apk update && apk upgrade && rm -rf /var/cache/apk/*
 COPY --from=builder /app/target/product-service-1.0.0.jar app.jar
 EXPOSE 8081
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \

@@ -94,6 +94,32 @@ pipeline {
             }
         }
 
+        stage('SonarCloud Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonarcloud-token',
+                                        variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        echo "===== SonarCloud Code Quality Analysis ====="
+                        cd product-service
+                        mvn sonar:sonar \
+                            -Dsonar.projectKey=iam-daasari_devops-ecommerce-project \
+                            -Dsonar.organization=iam-daasari \
+                            -Dsonar.host.url=https://sonarcloud.io \
+                            -Dsonar.login=${SONAR_TOKEN}
+                        echo "===== SonarCloud Analysis Complete! ====="
+                    '''
+                }
+            }
+            post {
+                success {
+                    echo 'Code quality check PASSED!'
+                }
+                failure {
+                    echo 'Code quality issues found! Check SonarCloud dashboard.'
+                }
+            }
+        }
+
         stage('Package') {
             steps {
                 echo '===== Stage 6: Creating JAR file ====='
@@ -128,6 +154,53 @@ pipeline {
                 }
                 failure {
                     echo 'Docker build failed! Check Dockerfile.'
+                }
+            }
+        }
+
+        stage('Trivy Security Scan') {
+            steps {
+                sh '''
+                    echo "===== Trivy Security Scan ====="
+                    export TMPDIR=/home/ubuntu/.trivy-tmp
+                    export TRIVY_CACHE_DIR=/home/ubuntu/.trivy-cache
+                    mkdir -p $TMPDIR $TRIVY_CACHE_DIR
+
+                    trivy image \
+                        --exit-code 1 \
+                        --severity CRITICAL,HIGH \
+                        --ignore-unfixed \
+                        --no-progress \
+                        --scanners vuln \
+                        --cache-dir $TRIVY_CACHE_DIR \
+                        --format table \
+                        ${DOCKER_HUB_USER}/${IMAGE_NAME}:${BUILD_NUMBER}
+
+                    echo "===== Trivy Scan PASSED! Image is secure! ====="
+                '''
+            }
+            post {
+                always {
+                    sh '''
+                        export TMPDIR=/home/ubuntu/.trivy-tmp
+                        export TRIVY_CACHE_DIR=/home/ubuntu/.trivy-cache
+                        trivy image \
+                            --exit-code 0 \
+                            --severity CRITICAL,HIGH \
+                            --ignore-unfixed \
+                            --scanners vuln \
+                            --cache-dir $TRIVY_CACHE_DIR \
+                            --format json \
+                            --output trivy-report-${BUILD_NUMBER}.json \
+                            ${DOCKER_HUB_USER}/${IMAGE_NAME}:${BUILD_NUMBER} || true
+                        echo "Trivy JSON report saved!"
+                    '''
+                }
+                success {
+                    echo 'Security scan PASSED! No CRITICAL/HIGH vulnerabilities found!'
+                }
+                failure {
+                    echo 'Security scan FAILED! Fix vulnerabilities before deploying!'
                 }
             }
         }

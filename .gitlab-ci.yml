@@ -1,8 +1,10 @@
 stages:
   - build
   - test
+  - sonarqube
   - package
   - docker
+  - security
   - deploy
 
 variables:
@@ -60,6 +62,25 @@ maven-test:
   only:
     - main
 
+sonarqube-analysis:
+  stage: sonarqube
+  image: maven:3.9.5-eclipse-temurin-17
+  cache:
+    key: maven-sonar-cache
+    paths:
+      - .m2/repository/
+  script:
+    - echo "===== SonarCloud Analysis ====="
+    - cd product-service
+    - mvn sonar:sonar
+        -Dsonar.projectKey=$SONAR_PROJECT_KEY
+        -Dsonar.organization=$SONAR_ORG_KEY
+        -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.login=$SONAR_TOKEN
+    - echo "===== SonarCloud Analysis Complete! ====="
+  only:
+    - main
+
 maven-package:
   stage: package
   image: maven:3.9.5-eclipse-temurin-17
@@ -92,6 +113,48 @@ docker-build-push:
     - echo "Pushing to DockerHub"
     - docker push $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
     - docker push $DOCKERHUB_USERNAME/product-service:gitlab-latest
+  only:
+    - main
+
+trivy-scan:
+  stage: security
+  image: aquasec/trivy:latest
+  variables:
+    TRIVY_NO_PROGRESS: 'true'
+    TRIVY_CACHE_DIR: '.trivycache'
+    TMPDIR: '/tmp'
+  cache:
+    key: trivy-db-cache
+    paths:
+      - .trivycache/
+  script:
+    - echo "===== Trivy Security Scan ====="
+    - trivy image
+        --exit-code 1
+        --severity CRITICAL,HIGH
+        --ignore-unfixed
+        --no-progress
+        --scanners vuln
+        --cache-dir $TRIVY_CACHE_DIR
+        --format table
+        $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
+    - echo "===== Trivy Scan PASSED! Image is secure! ====="
+  after_script:
+    - trivy image
+        --exit-code 0
+        --severity CRITICAL,HIGH
+        --ignore-unfixed
+        --scanners vuln
+        --cache-dir $TRIVY_CACHE_DIR
+        --format json
+        --output trivy-report.json
+        $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA || true
+  artifacts:
+    name: trivy-security-report
+    when: always
+    paths:
+      - trivy-report.json
+    expire_in: 30 days
   only:
     - main
 

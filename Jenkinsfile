@@ -162,8 +162,8 @@ pipeline {
             steps {
                 sh '''
                     echo "===== Trivy Security Scan ====="
-                    export TMPDIR=/home/ubuntu/.trivy-tmp
-                    export TRIVY_CACHE_DIR=/home/ubuntu/.trivy-cache
+                    export TMPDIR=$WORKSPACE/.trivy-tmp
+                    export TRIVY_CACHE_DIR=$WORKSPACE/.trivy-cache
                     mkdir -p $TMPDIR $TRIVY_CACHE_DIR
 
                     trivy image \
@@ -182,10 +182,10 @@ pipeline {
             post {
                 always {
                     sh '''
-                        export TMPDIR=/home/ubuntu/.trivy-tmp
-                        export TRIVY_CACHE_DIR=/home/ubuntu/.trivy-cache
+                        export TMPDIR=$WORKSPACE/.trivy-tmp
+                        export TRIVY_CACHE_DIR=$WORKSPACE/.trivy-cache
                         trivy image \
-                            --exit-code 0 \
+                            --exit-code 1 \
                             --severity CRITICAL,HIGH \
                             --ignore-unfixed \
                             --scanners vuln \

@@ -100,7 +100,7 @@ pipeline {
                                         variable: 'SONAR_TOKEN')]) {
                     sh '''
                         echo "===== SonarCloud Code Quality Analysis ====="
-                        cd product-service
+			cd app/product-service
                         mvn sonar:sonar \
                             -Dsonar.projectKey=iam-daasari_devops-ecommerce-project \
                             -Dsonar.organization=iam-daasari \

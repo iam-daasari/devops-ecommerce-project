@@ -101,7 +101,7 @@ pipeline {
                     sh '''
                         echo "===== SonarCloud Code Quality Analysis ====="
 			cd app/product-service
-                        mvn sonar:sonar \
+                        mvn clean compile sonar:sonar \
                             -Dsonar.projectKey=iam-daasari_devops-ecommerce-project \
                             -Dsonar.organization=iam-daasari \
                             -Dsonar.host.url=https://sonarcloud.io \

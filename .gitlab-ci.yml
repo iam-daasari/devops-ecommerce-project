@@ -134,7 +134,7 @@ trivy-scan:
     
     - echo "===== Trivy Scan PASSED! Image is secure! ====="
     
-    - trivy image --exit-code 0 --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA || true
+    - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA || true
 
 artifacts:
     name: trivy-security-report

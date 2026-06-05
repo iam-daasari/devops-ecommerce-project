@@ -100,7 +100,7 @@ jobs:
       - name: Build Docker image for scanning
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/product-service:scan-temp \
-            ./product-service
+            app/product-service
 
       - name: Run Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master

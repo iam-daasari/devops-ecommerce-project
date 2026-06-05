@@ -193,7 +193,7 @@ jobs:
               ${{ secrets.DOCKERHUB_USERNAME }}/product-service:github-latest
 
             # Health check
-            sleep 20
+            sleep 60
             curl -f http://localhost:8082/actuator/health && echo "GitHub Actions Deploy Success!"
 
   # ─────────────────────────

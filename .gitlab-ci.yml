@@ -127,7 +127,7 @@ trivy-scan:
     key: trivy-db-cache
     paths:
       - .trivycache/
- script:
+  script:
     - echo "===== Trivy Security Scan ====="
     
     # 1. Generate the JSON report FIRST with exit-code 0 so it always succeeds and creates the file
@@ -137,7 +137,7 @@ trivy-scan:
     - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --no-progress --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format table $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
     
     - echo "===== Trivy Scan PASSED! Image is secure! ====="
- artifacts:
+  artifacts:
     name: trivy-security-report
     when: always
     paths:
@@ -148,7 +148,7 @@ trivy-scan:
 
 deploy-to-ec2:
   stage: deploy
-  image: alpine:latest
+  image: alpine:latest 
   before_script:
     - apk add --no-cache openssh-client
     - mkdir -p ~/.ssh

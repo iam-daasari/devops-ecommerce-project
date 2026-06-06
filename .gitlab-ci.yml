@@ -130,12 +130,10 @@ trivy-scan:
   script:
     - echo "===== Trivy Security Scan ====="
     
-    # 1. Generate the JSON report FIRST with exit-code 0 so it always succeeds and creates the file
-    - trivy image --exit-code 0 --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
-    
-    # 2. Run the table scan AFTERWARD with exit-code 1 to safely fail the pipeline if vulnerabilities exist
-    - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --no-progress --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format table $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
-    
+   - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --no-progress --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format table $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
+
+    - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
+
     - echo "===== Trivy Scan PASSED! Image is secure! ====="
   artifacts:
     name: trivy-security-report

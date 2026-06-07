@@ -119,6 +119,7 @@ docker-build-push:
 trivy-scan:
   stage: security
   image: aquasec/trivy:latest
+    entrypoint: [""]
   variables:
     TRIVY_NO_PROGRESS: 'true'
     TRIVY_CACHE_DIR: '.trivycache'

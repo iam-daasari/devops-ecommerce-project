@@ -134,7 +134,7 @@ trivy-scan:
     
     - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --no-progress --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format table $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
 
-    - trivy image --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
+    - trivy image  --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
 
     - echo "===== Trivy Scan PASSED! Image is secure! ====="
   artifacts:

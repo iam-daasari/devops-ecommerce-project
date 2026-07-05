@@ -23,6 +23,7 @@
 	    <sonar.organization>iam-daasari</sonar.organization>
 	    <sonar.projectKey>iam-daasari_devops-ecommerce-project</sonar.projectKey>
 	    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+	    <jackson-bom.version>2.21.4</jackson-bom.version>
     </properties>
 
     <dependencies>

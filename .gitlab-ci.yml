@@ -124,17 +124,15 @@ trivy-scan:
   variables:
     TRIVY_NO_PROGRESS: 'true'
     TRIVY_CACHE_DIR: '.trivycache'
-    TMPDIR: '/tmp'
   cache:
     key: trivy-db-cache
     paths:
       - .trivycache/
   script:
     - echo "===== Trivy Security Scan ====="
-    
-    - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --no-progress --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format table $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
 
-    - trivy image  --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
+    - trivy image --exit-code 0 --severity CRITICAL,HIGH --ignore-unfixed --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format json --output trivy-report.json $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
+    - trivy image --exit-code 1 --severity CRITICAL,HIGH --ignore-unfixed --no-progress --scanners vuln --cache-dir $TRIVY_CACHE_DIR --format table $DOCKERHUB_USERNAME/product-service:$CI_COMMIT_SHORT_SHA
 
     - echo "===== Trivy Scan PASSED! Image is secure! ====="
   artifacts:

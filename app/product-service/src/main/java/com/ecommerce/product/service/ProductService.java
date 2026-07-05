@@ -9,24 +9,24 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
-    private final ProductRepository repository;
+	private final ProductRepository repository;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
+	public ProductService(ProductRepository repository) {
+		this.repository = repository;
+	}
 
-    public List<Product> getAllProducts() { return repository.findAll(); }
-    public Optional<Product> getProductById(Long id) { return repository.findById(id); }
-    public Product createProduct(Product product) { return repository.save(product); }
-    public void deleteProduct(Long id) { repository.deleteById(id); }
+	public List<Product> getAllProducts() { return repository.findAll(); }
+	public Optional<Product> getProductById(Long id) { return repository.findById(id); }
+	public Product createProduct(Product product) { return repository.save(product); }
+	public void deleteProduct(Long id) { repository.deleteById(id); }
 
-    public Product updateProduct(Long id, Product details) {
-        Product product = repository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Product not found: " + id));
-        product.setName(details.getName());
-        product.setDescription(details.getDescription());
-        product.setPrice(details.getPrice());
-        product.setStock(details.getStock());
-        return repository.save(product);
-    }
+	public Product updateProduct(Long id, Product details) {
+		Product product = repository.findById(id)
+			.orElseThrow(() -> new RuntimeException("Product not found: " + id));
+		product.setName(details.getName());
+		product.setDescription(details.getDescription());
+		product.setPrice(details.getPrice());
+		product.setStock(details.getStock());
+		return repository.save(product);
+	}
 }

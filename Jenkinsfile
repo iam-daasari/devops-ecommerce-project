@@ -264,7 +264,7 @@ pipeline {
             steps {
                 echo '===== Stage 10: Verifying Deployment ====='
                 sh """
-                    sleep 20
+                    sleep 60
                     curl -f http://localhost:8081/actuator/health || exit 1
                     echo "Application is healthy and running!"
                 """

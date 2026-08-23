@@ -55,7 +55,7 @@ Docker Build → Trivy Scan → Push to Registry → Deploy → Health Check
 20+ real failures faced during this build — Jenkins executor scheduling, 
 disk space management, Java version conflicts, SSH key formatting, YAML 
 syntax and indentation errors, Trivy disk quota issues — each documented 
-with root cause, fix, and lesson learned. See `/docs/failures.md` for the 
+with root cause, fix, and lesson learned. See `failures.md` for the 
 complete list.
 
 ## Roadmap
